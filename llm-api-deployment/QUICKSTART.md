@@ -1,7 +1,33 @@
 # 快速开始指南
 
-欢迎使用开源大模型部署方案！本指南将帮助你在 5 分钟内部署一个支持 Claude Code 工具调用的本地大模型。
+欢迎使用开源大模型部署方案！本指南提供两种使用方式：
 
+## 使用场景选择
+
+### 🎯 场景一：作为 Claude Code 后端（推荐）
+
+**用途**: 将本地模型替代 Anthropic Claude API，让 Claude Code 使用本地模型运行
+
+**优势**:
+- ✅ 完全本地化，数据不出内网
+- ✅ 无需 Anthropic API Key
+- ✅ 无调用次数限制
+- ✅ 更快的响应速度（无网络延迟）
+
+**快速开始** → [跳转到 Claude Code 后端部署](#claude-code-后端部署)
+
+### 📡 场景二：独立 API 服务
+
+**用途**: 部署独立的 LLM API 服务，供各种应用调用
+
+**优势**:
+- ✅ OpenAI API 兼容
+- ✅ 可供多个应用使用
+- ✅ 灵活的调用方式
+
+**快速开始** → [跳转到独立 API 部署](#独立-api-部署)
+
+---
 
 ## 前提条件
 
@@ -9,17 +35,85 @@
 - 至少 32GB 内存（推荐 64GB+）
 - Docker 和 Docker Compose 已安装
 
+---
 
-## 快速部署（3 步）
+## Claude Code 后端部署
+
+### 1. 克隆仓库并进入目录
+
+```bash
+git clone https://github.com/githubstudycloud/gi009.git
+cd gi009/llm-api-deployment
+```
+
+### 2. 一键部署
+
+```bash
+chmod +x start-claude-backend.sh
+bash start-claude-backend.sh
+```
+
+脚本会自动：
+- 部署 vLLM 推理引擎
+- 部署 LiteLLM 代理（包装为 Claude API）
+- 生成 API Key
+- 显示配置说明
+
+### 3. 配置 Claude Code
+
+脚本结束后会显示类似以下的配置：
+
+```bash
+export ANTHROPIC_API_KEY="sk-local-xxxxxxxxxxxx"
+export ANTHROPIC_BASE_URL="http://localhost:8080"
+```
+
+将其添加到你的 shell 配置文件：
+
+```bash
+# 对于 bash
+echo 'export ANTHROPIC_API_KEY="sk-local-xxxxxxxxxxxx"' >> ~/.bashrc
+echo 'export ANTHROPIC_BASE_URL="http://localhost:8080"' >> ~/.bashrc
+source ~/.bashrc
+
+# 对于 zsh
+echo 'export ANTHROPIC_API_KEY="sk-local-xxxxxxxxxxxx"' >> ~/.zshrc
+echo 'export ANTHROPIC_BASE_URL="http://localhost:8080"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### 4. 启动 Claude Code
+
+```bash
+# Claude Code 现在会自动使用本地模型！
+claude-code
+```
+
+### 5. 测试验证
+
+```bash
+# 测试 Claude API 格式
+chmod +x test-claude-api.sh
+API_KEY="your-generated-key" ./test-claude-api.sh
+
+# 查看日志
+docker-compose -f docker-compose-with-litellm.yml logs -f
+```
+
+**完整说明**: [CLAUDE_CODE_BACKEND.md](./CLAUDE_CODE_BACKEND.md)
+
+---
+
+## 独立 API 部署
 
 ### 1. 克隆仓库
 
 ```bash
 git clone https://github.com/githubstudycloud/gi009.git
-cd gi009
+cd gi009/llm-api-deployment
 ```
 
-### 2. 启动服务
+### 2. 选择并启动模型
 
 **方式A：使用启动脚本（推荐）**
 

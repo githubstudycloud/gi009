@@ -1,9 +1,53 @@
-# 支持 Claude Code 工具调用的开源大模型部署方案
+# Claude Code 本地模型后端部署方案
+
+将开源大模型部署为 Claude Code 的本地运行引擎，替代 Anthropic Claude API。
+
+## 核心功能
+
+- 🚀 **完全本地化**: 无需调用远程 API，数据不出内网
+- 🔄 **Claude API 兼容**: 通过 LiteLLM 包装，完全兼容 Claude API 格式
+- 💻 **CPU 推理**: 无需 GPU，纯内存运行
+- 🛠️ **工具调用**: 原生支持 Function Calling
+- 🇨🇳 **中文优化**: 代码和文档均支持中文
+- 👥 **多用户**: 支持 1-10 人同时使用
+
+## 两种使用方式
+
+### 方式一：作为 Claude Code 后端（推荐）⭐
+
+将本地模型伪装成 Claude API，Claude Code 直接调用本地服务：
+
+```bash
+# 一键部署 vLLM + LiteLLM
+bash start-claude-backend.sh
+
+# 配置 Claude Code
+export ANTHROPIC_API_KEY="your-generated-key"
+export ANTHROPIC_BASE_URL="http://localhost:8080"
+
+# Claude Code 现在使用本地模型！
+claude-code
+```
+
+详细说明：[CLAUDE_CODE_BACKEND.md](./CLAUDE_CODE_BACKEND.md)
+
+### 方式二：作为独立 API 服务
+
+仅部署推理引擎，通过 OpenAI 格式 API 调用：
+
+```bash
+# 部署模型
+docker-compose up -d
+
+# 通过 API 调用
+curl http://localhost:8000/v1/chat/completions ...
+```
 
 ## 环境信息
-- **系统**: Ubuntu 18.04.2
-- **CPU**: Intel Xeon E5-2680
-- **内存**: 363GB 总内存，238GB 可用
+
+- **系统**: Ubuntu 18.04.2+
+- **CPU**: Intel Xeon E5-2680（或同等性能）
+- **内存**: 363GB 总内存，238GB 可用（最低 32GB）
 - **部署方式**: Docker + CPU 推理（纯内存运行）
 - **用户数**: 支持 1-10 人同时使用
 

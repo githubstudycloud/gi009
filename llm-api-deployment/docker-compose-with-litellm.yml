@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # vLLM 推理引擎
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: qwen-coder-vllm
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/root/.cache/huggingface
+      - ./logs:/app/logs
+    environment:
+      - HF_ENDPOINT=https://hf-mirror.com
+      - HUGGING_FACE_HUB_TOKEN=${HF_TOKEN:-}
+    command: >
+      --model Qwen/Qwen2.5-Coder-32B-Instruct
+      --served-model-name qwen2.5-coder-32b
+      --host 0.0.0.0
+      --port 8000
+      --max-model-len 8192
+      --max-num-seqs 10
+      --trust-remote-code
+      --dtype bfloat16
+      --enable-chunked-prefill
+      --disable-log-requests
+    restart: unless-stopped
+    shm_size: '16gb'
+    deploy:
+      resources:
+        limits:
+          memory: 60G
+        reservations:
+          memory: 50G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 300s
+
+  # LiteLLM 代理 - 将本地模型包装成 Claude API
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: litellm-claude-proxy
+    ports:
+      - "8080:8080"
+    environment:
+      - LITELLM_MASTER_KEY=${LITELLM_KEY:-sk-1234567890abcdef}
+      - DATABASE_URL=
+      - LITELLM_LOG=INFO
+    volumes:
+      - ./litellm-claude-config.yaml:/app/config.yaml
+      - ./logs:/app/logs
+    command: >
+      --config /app/config.yaml
+      --port 8080
+      --host 0.0.0.0
+      --detailed_debug
+    depends_on:
+      vllm:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  default:
+    name: claude-local-network

@@ -1,0 +1,91 @@
+model_list:
+  # 将本地 Qwen2.5-Coder 映射为 Claude Sonnet 4.5
+  - model_name: claude-sonnet-4-5-20250929
+    litellm_params:
+      model: openai/qwen2.5-coder-32b
+      api_base: http://vllm:8000/v1
+      api_key: dummy
+      temperature: 0.7
+      max_tokens: 8192
+
+  # 映射为 Claude 3.5 Sonnet
+  - model_name: claude-3-5-sonnet-20241022
+    litellm_params:
+      model: openai/qwen2.5-coder-32b
+      api_base: http://vllm:8000/v1
+      api_key: dummy
+      temperature: 0.7
+      max_tokens: 8192
+
+  # 映射为 Claude 3.5 Sonnet (旧版本)
+  - model_name: claude-3-5-sonnet-20240620
+    litellm_params:
+      model: openai/qwen2.5-coder-32b
+      api_base: http://vllm:8000/v1
+      api_key: dummy
+
+  # 映射为 Claude 3 Opus
+  - model_name: claude-3-opus-20240229
+    litellm_params:
+      model: openai/qwen2.5-coder-32b
+      api_base: http://vllm:8000/v1
+      api_key: dummy
+
+  # 同时提供 OpenAI 格式（兼容其他工具）
+  - model_name: gpt-4
+    litellm_params:
+      model: openai/qwen2.5-coder-32b
+      api_base: http://vllm:8000/v1
+      api_key: dummy
+
+general_settings:
+  # 主密钥 - 用于访问 LiteLLM 代理
+  master_key: sk-1234567890abcdef  # ⚠️ 生产环境请修改此密钥
+
+  # 不使用数据库（简化部署）
+  database_url: null
+
+  # 允许的路由
+  allowed_routes:
+    - /v1/messages       # Claude API 格式
+    - /v1/chat/completions  # OpenAI API 格式
+    - /health
+    - /models
+
+litellm_settings:
+  # 丢弃不支持的参数（提高兼容性）
+  drop_params: true
+
+  # 不添加函数到提示（本地模型原生支持）
+  add_function_to_prompt: false
+
+  # 回调设置
+  success_callback: []
+  failure_callback: []
+
+  # 缓存设置（可选）
+  cache: false
+
+  # 设置超时
+  request_timeout: 300
+
+  # 日志级别
+  set_verbose: true
+
+router_settings:
+  # 路由策略
+  routing_strategy: simple-shuffle
+
+  # 重试次数
+  num_retries: 2
+
+  # 超时时间（秒）
+  timeout: 300
+
+  # 允许的失败次数
+  allowed_fails: 3
+
+# 可选：添加使用限制
+# litellm_settings:
+#   max_budget: 100
+#   budget_duration: "1d"

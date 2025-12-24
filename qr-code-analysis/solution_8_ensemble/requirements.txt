@@ -1,0 +1,30 @@
+# 多模型集成方案依赖
+
+# 计算机视觉
+opencv-python>=4.8.0
+opencv-contrib-python>=4.8.0
+
+# 二维码解码
+pyzbar>=0.1.9
+
+# 图像处理
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# 数据处理
+pandas>=2.0.0
+
+# 可视化
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# 其他工具
+tqdm>=4.65.0
+
+# 可选: 如果需要使用YOLOv8作为集成成员
+# ultralytics>=8.0.0
+# torch>=2.0.0
+# torchvision>=0.15.0
+
+# 注意: WeChat QRCode检测器需要单独下载模型文件
+# https://github.com/WeChatCV/opencv_3rdparty

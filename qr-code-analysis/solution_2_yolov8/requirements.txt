@@ -1,0 +1,37 @@
+# YOLOv8二维码检测方案依赖
+
+# 深度学习框架
+torch>=2.0.0
+torchvision>=0.15.0
+
+# YOLOv8
+ultralytics>=8.0.0
+
+# 计算机视觉
+opencv-python>=4.8.0
+opencv-contrib-python>=4.8.0
+
+# 二维码解码
+pyzbar>=0.1.9
+
+# 图像处理
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# 数据处理
+PyYAML>=6.0
+
+# 可视化
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# 进度条
+tqdm>=4.65.0
+
+# 其他工具
+pandas>=2.0.0
+
+# 如果需要GPU加速，根据CUDA版本安装对应的torch
+# 访问 https://pytorch.org/ 获取安装命令
+# 例如 CUDA 11.8:
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118

@@ -151,17 +151,78 @@ docker-compose -f docker-compose-deepseek.yml up -d
 **适用场景**: 资源受限环境
 
 
+### 方案六：QwQ-32B（深度推理）
+
+**内存占用**: 约 40-50GB
+
+**优势**:
+- 🧠 专注深度推理任务
+- 📊 32.5B参数，32K-131K上下文
+- 🎯 Apache 2.0开源
+- 💡 特别适合复杂逻辑问题
+
+**劣势**:
+- ⚠️ Function Calling支持有限
+- ⚠️ 更适合推理而非工具调用
+
+**部署命令**:
+```bash
+docker-compose -f docker-compose-qwq32b.yml up -d
+```
+
+**适用场景**: 数学问题、逻辑推理、复杂思考任务
+
+
+### 方案七：Gemma 3 27B（Google新品）
+
+**内存占用**: 约 35-45GB
+
+**优势**:
+- 🌟 Google 2025年新发布
+- 🔧 原生Function Calling（Gemma 3特性）
+- 📚 128K上下文
+- 🚀 单GPU即可运行
+- 🎓 13T tokens训练
+
+**部署命令**:
+```bash
+docker-compose -f docker-compose-gemma3.yml up -d
+```
+
+**适用场景**: Google生态集成、函数调用、多轮对话
+
+
 ## 快速选择指南
 
-| 需求 | 推荐模型 | 内存 | 特点 |
-|------|---------|------|------|
-| 最新代码生成 | Qwen3-Coder-30B-A3B 🔥 | 25-35GB | MoE，混合推理 |
-| Agent/工具调用 | GLM-4.5-Air 🔥 | 35-50GB | 工具专家，MIT开源 |
-| 顶级性能 | DeepSeek-V3 🔥 | 60-80GB | 接近GPT-4 |
-| 生产稳定 | Qwen2.5-Coder-32B | 40-50GB | 成熟方案 |
-| 资源受限 | DeepSeek-V2-Lite | 20-30GB | 快速高效 |
+| 需求 | 推荐模型 | CPU内存 | GPU显存(INT4) | 特点 |
+|------|---------|---------|--------------|------|
+| 最新代码生成 | Qwen3-Coder-30B-A3B 🔥 | 25-35GB | 15-20GB | MoE，混合推理 |
+| Agent/工具调用 | GLM-4.5-Air 🔥 | 35-50GB | 20-25GB | 工具专家，MIT开源 |
+| 顶级性能 | DeepSeek-V3 🔥 | 60-80GB | 35-40GB | 接近GPT-4 |
+| 深度推理 | QwQ-32B | 40-50GB | 20-24GB | 数学逻辑专家 |
+| Google生态 | Gemma 3 27B | 35-45GB | 16-20GB | 原生工具调用 |
+| 生产稳定 | Qwen2.5-Coder-32B | 40-50GB | 20-24GB | 成熟方案 |
+| 资源受限 | DeepSeek-V2-Lite | 20-30GB | 10-12GB | 快速高效 |
 
 详细对比：[MODEL_COMPARISON.md](./MODEL_COMPARISON.md)
+
+**硬件需求详解**: [HARDWARE_REQUIREMENTS.md](./HARDWARE_REQUIREMENTS.md) 📊
+
+### 💾 CPU vs GPU 内存对比
+
+**CPU 内存推理**（本项目主要方案）:
+- ✅ 无需GPU，使用系统内存
+- ✅ 内存容量大（64GB-512GB常见）
+- ✅ 部署简单，成本低
+- ⚠️ 速度较慢（5-15 tokens/秒）
+
+**GPU 显存推理**:
+- ✅ 速度快（50-100+ tokens/秒）
+- ✅ 延迟低（<1秒首token）
+- ⚠️ 需要高端GPU（RTX 4090/A100）
+- ⚠️ 显存有限（24GB-80GB）
+
+**详细硬件需求和性能对比**: 查看 [HARDWARE_REQUIREMENTS.md](./HARDWARE_REQUIREMENTS.md)
 
 
 ## 技术栈选择

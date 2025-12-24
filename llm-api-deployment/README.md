@@ -51,59 +51,117 @@ curl http://localhost:8000/v1/chat/completions ...
 - **部署方式**: Docker + CPU 推理（纯内存运行）
 - **用户数**: 支持 1-10 人同时使用
 
-## 推荐模型方案
+## 🆕 2025年最新推荐模型
 
-### 方案一：Qwen2.5-Coder-32B-Instruct（推荐）⭐
+### 方案一：Qwen3-Coder-30B-A3B（2025最新推荐）🔥
+
+**内存占用**: 约 25-35GB
+
+**优势**:
+- 🚀 2024年12月最新发布，MoE架构
+- ⚡ 仅3.3B激活参数，内存占用低
+- 🧠 混合推理模式（thinking + non-thinking）
+- 💪 超越QwQ-32B，10倍激活参数的性能
+- 🎯 128个专家，32K-131K上下文
+- 🛠️ 原生支持 Function Calling
+
+**部署命令**:
+```bash
+docker-compose -f docker-compose-qwen3.yml up -d
+```
+
+**适用场景**: 复杂代码推理、资源受限高性能需求、混合推理任务
+
+
+### 方案二：GLM-4.5-Air（工具调用专家）🔥
+
+**内存占用**: 约 35-50GB
+
+**优势**:
+- 🤖 专为Agent和工具调用优化
+- 📜 MIT开源，可商用
+- 🔧 原生工具调用（web浏览、代码执行、API集成）
+- 🧠 106B参数，12B激活（MoE）
+- 📊 128K上下文
+- 🇨🇳 中文支持优秀
+
+**部署命令**:
+```bash
+docker-compose -f docker-compose-glm45air.yml up -d
+```
+
+**适用场景**: Agent开发、复杂工具调用、企业商用
+
+
+### 方案三：DeepSeek-V3（顶级性能）🔥
+
+**内存占用**: 约 60-80GB
+
+**优势**:
+- 🏆 开源模型最强，接近GPT-4
+- 💎 671B参数，37B激活（MoE）
+- 🎓 强大推理和代码能力
+- 📚 14.8T tokens预训练
+- 🔥 通用前沿助手
+
+**部署命令**:
+```bash
+docker-compose -f docker-compose-deepseek-v3.yml up -d
+```
+
+**适用场景**: 追求最佳性能、充足内存环境
+
+
+## 经典稳定方案
+
+### 方案四：Qwen2.5-Coder-32B-Instruct（成熟稳定）⭐
 
 **内存占用**: 约 40-50GB
 
 **优势**:
-- 阿里最新代码模型，2024年11月发布
-- 原生支持 Function Calling（工具调用）
-- 中文和代码能力极强，专为编程任务优化
-- 32B参数量，性能与资源平衡最佳
-- 支持 128K 上下文
-- 兼容 OpenAI API 格式
+- 成熟稳定，文档完善
+- 原生支持 Function Calling
+- 中文和代码能力强
+- 32B参数，128K上下文
+- 生态完善
 
-**适用场景**: 代码生成、文档编写、工具调用
+**部署命令**:
+```bash
+docker-compose up -d
+```
 
-
-### 方案二：Qwen2.5-72B-Instruct
-
-**内存占用**: 约 80-100GB
-
-**优势**:
-- 更强的推理和代码能力
-- 同样支持 Function Calling
-- 适合要求更高性能的场景
-
-**适用场景**: 需要更强能力时使用
+**适用场景**: 生产环境、稳定性要求高
 
 
-### 方案三：DeepSeek-Coder-V2-Lite-Instruct（16B）
+### 方案五：DeepSeek-Coder-V2-Lite（资源节约）
 
 **内存占用**: 约 20-30GB
 
 **优势**:
-- DeepSeek 最新代码模型
+- 内存占用小
+- 推理速度快
+- 代码能力强（16B参数）
 - 支持 Function Calling
-- 内存占用小，适合资源受限场景
-- 中英文代码能力强
 
-**适用场景**: 资源节约型部署
+**部署命令**:
+```bash
+docker-compose -f docker-compose-deepseek.yml up -d
+```
+
+**适用场景**: 资源受限环境
 
 
-### 方案四：Qwen2.5-14B-Instruct
+## 快速选择指南
 
-**内存占用**: 约 18-25GB
+| 需求 | 推荐模型 | 内存 | 特点 |
+|------|---------|------|------|
+| 最新代码生成 | Qwen3-Coder-30B-A3B 🔥 | 25-35GB | MoE，混合推理 |
+| Agent/工具调用 | GLM-4.5-Air 🔥 | 35-50GB | 工具专家，MIT开源 |
+| 顶级性能 | DeepSeek-V3 🔥 | 60-80GB | 接近GPT-4 |
+| 生产稳定 | Qwen2.5-Coder-32B | 40-50GB | 成熟方案 |
+| 资源受限 | DeepSeek-V2-Lite | 20-30GB | 快速高效 |
 
-**优势**:
-- 通用能力强
-- 支持 Function Calling
-- 内存占用适中
-- 中文支持优秀
-
-**适用场景**: 平衡性能与资源
+详细对比：[MODEL_COMPARISON.md](./MODEL_COMPARISON.md)
 
 
 ## 技术栈选择

@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: qwen3-30b-a3b-vllm
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/root/.cache/huggingface
+      - ./logs:/app/logs
+    environment:
+      - HF_ENDPOINT=https://hf-mirror.com
+      - HUGGING_FACE_HUB_TOKEN=${HF_TOKEN:-}
+    command: >
+      --model Qwen/Qwen3-Coder-30B-A3B-Instruct
+      --served-model-name qwen3-coder-30b-a3b
+      --host 0.0.0.0
+      --port 8000
+      --max-model-len 32768
+      --max-num-seqs 10
+      --trust-remote-code
+      --dtype bfloat16
+      --enable-chunked-prefill
+      --disable-log-requests
+    restart: unless-stopped
+    shm_size: '16gb'
+    deploy:
+      resources:
+        limits:
+          memory: 35G
+        reservations:
+          memory: 28G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 300s
+
+networks:
+  default:
+    name: llm-network

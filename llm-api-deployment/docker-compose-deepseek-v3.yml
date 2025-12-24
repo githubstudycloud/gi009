@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: deepseek-v3-vllm
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/root/.cache/huggingface
+      - ./logs:/app/logs
+    environment:
+      - HF_ENDPOINT=https://hf-mirror.com
+      - HUGGING_FACE_HUB_TOKEN=${HF_TOKEN:-}
+    command: >
+      --model deepseek-ai/DeepSeek-V3
+      --served-model-name deepseek-v3
+      --host 0.0.0.0
+      --port 8000
+      --max-model-len 16384
+      --max-num-seqs 6
+      --trust-remote-code
+      --dtype bfloat16
+      --enable-chunked-prefill
+      --disable-log-requests
+      --tensor-parallel-size 1
+    restart: unless-stopped
+    shm_size: '24gb'
+    deploy:
+      resources:
+        limits:
+          memory: 80G
+        reservations:
+          memory: 65G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 600s
+
+networks:
+  default:
+    name: llm-network

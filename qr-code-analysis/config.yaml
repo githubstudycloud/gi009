@@ -1,0 +1,194 @@
+# 二维码智能分析系统 - 配置文件
+
+# 分析器配置
+analyzer:
+  # 使用的方案
+  # 可选: basic, yolo, morphology, wechat, ml, cnn, edge, ensemble, quality, cloud, vit
+  method: basic
+
+  # 清晰度评估阈值
+  clarity_thresholds:
+    clear: 500              # 清晰
+    slight_blur: 200        # 轻度模糊
+    medium_blur: 50         # 中度模糊
+    # 低于 medium_blur 则为重度模糊
+
+  # 对比度评估阈值
+  contrast_threshold: 50
+
+  # 面积阈值（百分比）
+  area_threshold_percent: 5.0
+
+# 批量处理配置
+batch:
+  # 是否启用多线程处理
+  enable_multithread: true
+
+  # 线程数量（-1表示自动检测）
+  num_threads: -1
+
+  # 批次大小
+  batch_size: 10
+
+  # 是否保存中间结果
+  save_intermediate: false
+
+# 输出配置
+output:
+  # 结果保存目录
+  results_dir: "./results"
+
+  # 是否保存详细日志
+  save_detailed_log: true
+
+  # 是否保存可视化结果
+  save_visualization: true
+
+  # 可视化配置
+  visualization:
+    # 是否在图片上标注检测结果
+    draw_bboxes: true
+
+    # 边界框颜色 (B, G, R)
+    bbox_color: [0, 255, 0]
+
+    # 边界框线宽
+    bbox_thickness: 2
+
+    # 是否显示文本标注
+    show_text: true
+
+    # 文本字体大小
+    text_font_scale: 0.6
+
+# 图像预处理配置
+preprocessing:
+  # 是否调整图像大小
+  resize_enabled: false
+
+  # 目标宽度（保持宽高比）
+  target_width: 1920
+
+  # 是否进行图像增强
+  enhance_enabled: false
+
+  # 增强方法: histogram_equalization, clahe, none
+  enhance_method: clahe
+
+# 深度学习模型配置（如果使用相关方案）
+deep_learning:
+  # 模型路径
+  model_path: "./models"
+
+  # 设备: cpu, cuda, mps
+  device: cpu
+
+  # 批处理大小
+  inference_batch_size: 8
+
+  # 是否使用混合精度
+  use_fp16: false
+
+# YOLOv8配置（方案2）
+yolo:
+  model_name: yolov8n.pt
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+
+# 云端API配置（方案10）
+cloud_api:
+  # 供应商: baidu, tencent, aliyun
+  provider: baidu
+
+  # API密钥（请勿提交到版本控制）
+  api_key: YOUR_API_KEY_HERE
+
+  # API密钥
+  secret_key: YOUR_SECRET_KEY_HERE
+
+  # 请求超时（秒）
+  timeout: 30
+
+  # 重试次数
+  max_retries: 3
+
+# 日志配置
+logging:
+  # 日志级别: DEBUG, INFO, WARNING, ERROR
+  level: INFO
+
+  # 日志文件路径
+  file_path: "./logs/qr_analysis.log"
+
+  # 日志格式
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+  # 是否输出到控制台
+  console_output: true
+
+# 性能监控配置
+performance:
+  # 是否启用性能监控
+  enabled: true
+
+  # 是否记录每张图片的处理时间
+  log_per_image: true
+
+  # 是否生成性能报告
+  generate_report: true
+
+# 数据集配置
+dataset:
+  # 训练集路径（如果需要训练模型）
+  train_dir: "./data/train"
+
+  # 验证集路径
+  val_dir: "./data/val"
+
+  # 测试集路径
+  test_dir: "./data/test"
+
+  # 数据增强
+  augmentation:
+    enabled: false
+    methods:
+      - rotation
+      - flip
+      - brightness
+      - contrast
+
+# 报告配置
+report:
+  # 报告格式: json, csv, html, pdf
+  formats:
+    - json
+    - html
+
+  # 是否生成统计图表
+  generate_charts: true
+
+  # 图表类型
+  chart_types:
+    - bar
+    - pie
+    - histogram
+
+  # 报告模板路径
+  template_path: "./templates"
+
+# 高级选项
+advanced:
+  # 是否启用调试模式
+  debug_mode: false
+
+  # 是否保存失败的检测结果
+  save_failed_detections: true
+
+  # 错误处理策略: skip, retry, abort
+  error_handling: skip
+
+  # 缓存配置
+  cache:
+    enabled: false
+    cache_dir: "./cache"
+    max_size_mb: 1024
